@@ -196,7 +196,7 @@ if (process.env.NOTIFY_SHOWNAMETYPE) {
     if (ShowRemarkType == "4")
         console.log("检测到显示备注名称，格式为: 备注");
 }
-async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By https://github.com/KingRan/KR',strsummary="") {
+async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By 游鱼',strsummary="") {
     console.log(`开始发送通知...`);
 
     if (process.env.NOTIFY_FILTERBYFILE) {
@@ -381,7 +381,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                                         strNotifyOneTemp += `\n` + strAllNotify;
                                     desp = strNotifyOneTemp;
                                     if (WP_APP_TOKEN_ONE) {
-                                        await sendNotifybyWxPucher(`账号过期下线通知`, strNotifyOneTemp, strdecPtPin,'\n\n本通知 By ccwav Mod',`账号下线通知`);
+                                        await sendNotifybyWxPucher(`账号过期下线通知`, strNotifyOneTemp, strdecPtPin,'\n\n本通知 By 游鱼',`账号下线通知`);
                                     }
 
                                 } else {
@@ -392,7 +392,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                                         strNotifyOneTemp += `\n` + strAllNotify;
                                     desp = strNotifyOneTemp;
                                     if (WP_APP_TOKEN_ONE) {
-                                        await sendNotifybyWxPucher(`账号过期下线通知`, strNotifyOneTemp, strdecPtPin,'\n\n本通知 By ccwav Mod',`账号下线通知`);
+                                        await sendNotifybyWxPucher(`账号过期下线通知`, strNotifyOneTemp, strdecPtPin,'\n\n本通知 By 游鱼',`账号下线通知`);
                                     }
                                 }
                             } else {
@@ -957,7 +957,7 @@ function getRemark(strRemark) {
     }
 }
 
-async function sendNotifybyWxPucher(text, desp, PtPin, author = '\n\n本通知 By KR仓库', strsummary = "") {
+async function sendNotifybyWxPucher(text, desp, PtPin, author = '\n\n本通知 By 游鱼', strsummary = "") {
 
     try {
         var Uid = "";
