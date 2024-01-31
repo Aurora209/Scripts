@@ -1,5 +1,5 @@
 /*
- 33 3 17-31,1-4 1,2 * jd_lnjhy.js
+ 0 3 * * * jd_lnjhy.js
  */
 
 const $ = new Env('龙年接好运');
