@@ -1,7 +1,7 @@
 /*
 京喜直营抽奖
 
-cron:1 10 * * * jd_jx_party.js
+cron:1 9,21 * * * jd_jx_party.js
 
 */
 
