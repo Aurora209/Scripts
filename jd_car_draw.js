@@ -1,7 +1,7 @@
 /*
 京东汽车抽奖
 
-cron "55 11 * * *" script-path=jd_car_draw.js, tag=京东汽车抽奖
+cron "5 8,16 * * *" script-path=jd_car_draw.js, tag=京东汽车抽奖
 
 */
 const $ = new Env('京东汽车抽奖')
