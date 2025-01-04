@@ -4,10 +4,10 @@
 
 const $ = new Env('超市答题抽奖');
 let answer = {
-    '3eefbKLLYztPXQT8qcDdjyioWFLz': '想',
-    '34hzrdrBe4uudnRQyQrxzcWpbJgH': '北斗',
-    '3nAx1Y63uXudopZxjzXdrWV6ZdBb': '五',
-    '3jeq2vHxzkfG3dCQnyDUxCzEwDAA': '小狗',
+    '2A7iTfDHUytGAqbLMeRSbuvP1Jk9': '7',
+    'NATbwgRxMTixUrqti6vwFaTQErL': '大师兄',
+    '2zooc3DcVXi7mU9rFov4wHqkyWLy': '风火轮',
+    '4G6xakGvNhmFK6Psx6eAThL78fWx': '东海龙王',
 	'37VLusK94NN8bsw8gS662fa79anD': '青花瓷',
 	'4PeFrJRMV5rgcVrUPvWs5fPXJuSE': '兰亭序',
     '4VFwbpg78hjvqkA4MfiCXFSuwZWx': '2',
