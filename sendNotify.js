@@ -21,9 +21,7 @@ const querystring = require('querystring');
 const exec = require('child_process').exec;
 const $ = new Env();
 const timeout = 15000; //超时时间(单位毫秒)
-console.log("\n====加载sendNotify，频道：https://t.me/scriptalking====\n");
-const common = require('./utils/Rebels_jdCommon');
-$.UA = common.genUA($.UserName);
+//console.log("加载sendNotify，当前版本: 20230712");
 // =======================================go-cqhttp通知设置区域===========================================
 //gobot_url 填写请求地址http://127.0.0.1/send_private_msg
 //gobot_token 填写在go-cqhttp文件设置的访问密钥
@@ -104,6 +102,14 @@ let IGOT_PUSH_KEY = '';
 //PUSH_PLUS_USER： 一对多推送的“群组编码”（一对多推送下面->您的群组(如无则新建)->群组编码，如果您是创建群组人。也需点击“查看二维码”扫描绑定，否则不能接受群组消息推送）
 let PUSH_PLUS_TOKEN = '';
 let PUSH_PLUS_USER = '';
+
+// =======================================smtp 通知设置=======================================
+// 变量SMTP_SERVICE SMTP_EMAI SMTP_TO SMTP_PASSWORD SMTP_NAME
+let SMTP_SERVICE = ''; // 邮箱服务名称，比如 126、163、Gmail、QQ 等，支持列表 https://github.com/nodemailer/nodemailer/blob/master/lib/well-known/services.json
+let SMTP_EMAIL = ''; // SMTP 发件邮箱
+let SMTP_TO = ''; // SMTP 收件邮箱，默认通知将会发给发件邮箱
+let SMTP_PASSWORD = ''; // SMTP 登录密码，也可能为特殊口令，视具体邮件服务商说明而定
+let SMTP_NAME = ''; // SMTP 收发件人姓名，可随意填写
 
 // ======================================= WxPusher 通知设置区域 ===========================================
 // 此处填你申请的 appToken. 官方文档：https://wxpusher.zjiecode.com/docs
@@ -193,9 +199,10 @@ let isLogin = false;
 if (process.env.NOTIFY_SHOWNAMETYPE) {
     ShowRemarkType = process.env.NOTIFY_SHOWNAMETYPE;
 }
-async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By https://github.com/shufflewzc/faker2',strsummary="") {
-    console.log(`开始发送通知...`);
-
+async function sendNotify(text, desp, params = {}, author = "\n================================\n好物推荐：https://u.jd.com/WLEVYTM",strsummary="") {
+    console.log(`开始发送通知...`); 
+	
+	//NOTIFY_FILTERBYFILE代码来自Ca11back.
     if (process.env.NOTIFY_FILTERBYFILE) {
         var no_notify = process.env.NOTIFY_FILTERBYFILE.split('&');
         if (module.parent.filename) {
@@ -670,7 +677,18 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
 			TG_PROXY_PORT = process.env["TG_PROXY_PORT"];		
 		if (process.env["TG_API_HOST"]) 
 			TG_API_HOST = process.env["TG_API_HOST"];
-
+		
+		if (process.env["SMTP_NAME"]) 
+			TG_PROXY_AUTH = process.env["SMTP_NAME"];
+		if (process.env["SMTP_PASSWORD"]) 
+			TG_PROXY_HOST = process.env["SMTP_PASSWORD"];
+		if (process.env["SMTP_TO"]) 
+			TG_PROXY_PORT = process.env["SMTP_TO"];		
+		if (process.env["SMTP_EMAIL"]) 
+			TG_API_HOST = process.env["SMTP_EMAIL"];
+		if (process.env["SMTP_SERVICE"]) 
+			TG_API_HOST = process.env["SMTP_SERVICE"];		
+		
         if (process.env["DD_BOT_TOKEN" + UseGroupNotify] && Use_ddBotNotify) {
             DD_BOT_TOKEN = process.env["DD_BOT_TOKEN" + UseGroupNotify];
             if (process.env["DD_BOT_SECRET" + UseGroupNotify]) {
@@ -754,27 +772,27 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
                                     }
                                 }
                             }
-                            if (!$.FoundPin) {
-                                //缓存文件中有没有这个账号，调用京东接口获取别名,并更新缓存文件
-                                console.log($.UserName + "好像是新账号，尝试获取别名.....");
-                                await GetnickName();
-                                if (!$.nickName) {
-                                    console.log("别名获取失败，尝试调用另一个接口获取别名.....");
-                                    await GetnickName2();
-                                }
-                                if ($.nickName) {
-                                    console.log("好像是新账号，从接口获取别名" + $.nickName);
-                                } else {
-                                    console.log($.UserName + "该账号没有别名.....");
-                                }
-                                tempAddCK = {
-                                    "pt_pin": $.UserName,
-                                    "nickName": $.nickName
-                                };
-                                TempCK.push(tempAddCK);
-                                //标识，需要更新缓存文件
-                                boolneedUpdate = true;
-                            }
+                            //if (!$.FoundPin) {
+                            //    //缓存文件中有没有这个账号，调用京东接口获取别名,并更新缓存文件
+                            //    console.log($.UserName + "好像是新账号，尝试获取别名.....");
+                            //    await GetnickName();
+                            //    if (!$.nickName) {
+                            //        console.log("别名获取失败，尝试调用另一个接口获取别名.....");
+                            //        await GetnickName2();
+                            //    }
+                            //    if ($.nickName) {
+                            //        console.log("好像是新账号，从接口获取别名" + $.nickName);
+                            //    } else {
+                            //        console.log($.UserName + "该账号没有别名.....");
+                            //    }
+                            //    tempAddCK = {
+                            //        "pt_pin": $.UserName,
+                            //        "nickName": $.nickName
+                            //    };
+                            //    TempCK.push(tempAddCK);
+                            //    //标识，需要更新缓存文件
+                            //    boolneedUpdate = true;
+                            //}
                         }
 
                         $.nickName = $.nickName || $.UserName;
@@ -884,7 +902,8 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
         ddBotNotify(text, desp), //钉钉机器人
         qywxBotNotify(text, desp), //企业微信机器人
         qywxamNotify(text, desp, strsummary), //企业微信应用消息推送
-            fsBotNotify(text, desp),   //飞书机器人
+        fsBotNotify(text, desp),   //飞书机器人
+		smtpNotify(text, desp), // SMTP 邮件
         iGotNotify(text, desp, params), //iGot
         gobotNotify(text, desp), //go-cqhttp
         gotifyNotify(text, desp), //gotify
@@ -984,7 +1003,7 @@ function getRemark(strRemark) {
     }
 }
 
-async function sendNotifybyWxPucher(text, desp, PtPin, author = '\n\n本通知 By Faker', strsummary = "") {
+async function sendNotifybyWxPucher(text, desp, PtPin, author = '\n================================\n好物推荐：<a href="https://u.jd.com/WLEVYTM">https://u.jd.com/WLEVYTM</a>', strsummary = "") {
 
     try {
         var Uid = "";
@@ -1026,15 +1045,15 @@ async function sendNotifybyWxPucher(text, desp, PtPin, author = '\n\n本通知 B
                                         }
                                     }
                                 }
-                                if (!$.FoundPin) {
-                                    //缓存文件中有没有这个账号，调用京东接口获取别名,并更新缓存文件
-                                    console.log($.UserName + "好像是新账号，尝试获取别名.....");
-                                    await GetnickName();
-                                    if (!$.nickName) {
-                                        console.log("别名获取失败，尝试调用另一个接口获取别名.....");
-                                        await GetnickName2();
-                                    }
-                                }
+                                //if (!$.FoundPin) {
+                                //    //缓存文件中有没有这个账号，调用京东接口获取别名,并更新缓存文件
+                                //    console.log($.UserName + "好像是新账号，尝试获取别名.....");
+                                //    await GetnickName();
+                                //    if (!$.nickName) {
+                                //        console.log("别名获取失败，尝试调用另一个接口获取别名.....");
+                                //        await GetnickName2();
+                                //    }
+                                //}
                             }
 
                             $.nickName = $.nickName || $.UserName;
@@ -1369,81 +1388,57 @@ function BarkNotify(text, desp, params = {}) {
 function tgBotNotify(text, desp) {
     return new Promise(resolve => {
         if (TG_BOT_TOKEN && TG_USER_ID) {
-            const maxSegmentLength = 4000; 
-            const despSegments = [];
-            let remainingDesp = desp;
-            
-            while (remainingDesp.length > maxSegmentLength) {
-                let index = remainingDesp.lastIndexOf('\n', maxSegmentLength);
-                if (index === -1) {
-                    index = maxSegmentLength;
-                }
-                despSegments.push(remainingDesp.slice(0, index));
-                remainingDesp = remainingDesp.slice(index).trimLeft();
+            const options = {
+                url: `https://${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
+                json: {
+                    chat_id: `${TG_USER_ID}`,
+                    text: `${text}\n\n${desp}`,
+                    disable_web_page_preview: true
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                timeout
             }
-            if (remainingDesp) {
-                despSegments.push(remainingDesp);
-            }
-            
-            const sendSegment = (index) => {
-                if (index < despSegments.length) {
-                    const options = {
-                        url: `https://${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
-                        json: {
-                            chat_id: `${TG_USER_ID}`,
-                            text: `${text}\n\n${despSegments[index]}`, 
-                            disable_web_page_preview: true
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        timeout
-                    };
-                    if (TG_PROXY_HOST && TG_PROXY_PORT) {
-                        const tunnel = require("tunnel");
-                        const agent = {
-                            https: tunnel.httpsOverHttp({
-                                proxy: {
-                                    host: TG_PROXY_HOST,
-                                    port: TG_PROXY_PORT * 1,
-                                    proxyAuth: TG_PROXY_AUTH
-                                }
-                            })
-                        };
-                        Object.assign(options, { agent });
-                    }
-                    $.post(options, (err, resp, data) => {
-                        if (err) {
-                            console.log('telegram发送通知消息失败！！\n');
-                            console.log(err);
-                        } else {
-                            data = JSON.parse(data);
-                            if (data.ok) {
-                                console.log('Telegram发送通知消息成功🎉\n');
-                            } else if (data.error_code === 400) {
-                                console.log('请主动给bot发送一条消息并检查接收用户ID是否正确。\n');
-                            } else if (data.error_code === 401) {
-                                console.log('Telegram bot token 填写错误。\n');
-                            }
+            if (TG_PROXY_HOST && TG_PROXY_PORT) {
+                const tunnel = require("tunnel");
+                const agent = {
+                    https: tunnel.httpsOverHttp({
+                        proxy: {
+                            host: TG_PROXY_HOST,
+                            port: TG_PROXY_PORT * 1,
+                            proxyAuth: TG_PROXY_AUTH
                         }
-                        // 继续发送下一段消息
-                        sendSegment(index + 1);
-                    });
-                } else {
-                    // 所有消息发送完成后 resolve
-                    resolve();
+                    })
                 }
-            };
-            // 开始发送第一段消息
-            sendSegment(0);
+                Object.assign(options, { agent })
+            }
+            $.post(options, (err, resp, data) => {
+                try {
+                    if (err) {
+                        console.log('telegram发送通知消息失败！！\n')
+                        console.log(err);
+                    } else {
+                        data = JSON.parse(data);
+                        if (data.ok) {
+                            console.log('Telegram发送通知消息成功🎉\n')
+                        } else if (data.error_code === 400) {
+                            console.log('请主动给bot发送一条消息并检查接收用户ID是否正确。\n')
+                        } else if (data.error_code === 401) {
+                            console.log('Telegram bot token 填写错误。\n')
+                        }
+                    }
+                } catch (e) {
+                    $.logErr(e, resp);
+                } finally {
+                    resolve(data);
+                }
+            })
         } else {
-            resolve();
+            resolve()
         }
-    });
+    })
 }
-
-
-
 
 function ddBotNotify(text, desp) {
     return new Promise((resolve) => {
@@ -1555,7 +1550,40 @@ function qywxBotNotify(text, desp) {
         }
     });
 }
+async function smtpNotify(text, desp) {
+  if (![SMTP_EMAIL, SMTP_PASSWORD].every(Boolean) || !SMTP_SERVICE) {
+    return;
+  }
 
+  try {
+    const nodemailer = require('nodemailer');
+    const transporter = nodemailer.createTransport({
+      service: SMTP_SERVICE,
+      auth: {
+        user: SMTP_EMAIL,
+        pass: SMTP_PASSWORD,
+      },
+    });
+
+    const addr = SMTP_NAME ? `"${SMTP_NAME}" <${SMTP_EMAIL}>` : SMTP_EMAIL;
+    const info = await transporter.sendMail({
+      from: addr,
+      to: SMTP_TO ? SMTP_TO.split(';') : addr,
+      subject: text,
+      html: `${desp.replace(/\n/g, '<br/>')}`,
+    });
+
+    transporter.close();
+
+    if (info.messageId) {
+      console.log('SMTP 发送通知消息成功🎉\n');
+      return true;
+    }
+    console.log('SMTP 发送通知消息失败😞\n');
+  } catch (e) {
+    console.log('SMTP 发送通知消息出现异常😞\n', e);
+  }
+}
 function fsBotNotify(text, desp) {
     return new Promise((resolve) => {
         const options = {
@@ -2118,7 +2146,7 @@ function GetnickName2() {
                 "Connection": "keep-alive",
                 "Cookie": cookie,
                 "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-                "User-Agent": $.UA
+                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
             }
         };
         $.post(options, (err, resp, data) => {
@@ -2150,22 +2178,35 @@ function GetnickName2() {
 }
 const got = require('got');
 require('dotenv').config();
-let exists = fs.existsSync('/ql/data/config/auth.json');
-let authFile="";
-if (exists) 
-	authFile="/ql/data/config/auth.json"
-else
-	authFile="/ql/config/auth.json"
-
+const tokenFileList = ['/ql/data/db/keyv.sqlite', '/ql/data/config/auth.json', '/ql/config/auth.json'];
+let authFile = getLatestFile(tokenFileList);
 const api = got.extend({
-  prefixUrl: 'http://127.0.0.1:5600',
-  retry: { limit: 0 },
+    prefixUrl: 'http://127.0.0.1:5600',
+    retry: { limit: 0 },
 });
+function getLatestFile(files) {
+    let latestFile = null;
+    let latestMtime = 0;
+    for (const file of files) {
+        try {
+            const stats = fs.statSync(file);
+            const mtime = stats.mtimeMs;
+            if (mtime > latestMtime) {
+                latestMtime = mtime;
+                latestFile = file;
+            }
+        } catch (e) {
+        }
+    }
+    return latestFile;
+}
 
 async function getToken() {
-  const authConfig = JSON.parse(fs.readFileSync(authFile));
-  return authConfig.token;
+    const authConfig = await fs.readFileSync(authFile);
+    // console.log(authConfig.toString().match(/"token":"(.*?)",/)[1])
+    return authConfig.toString().match(/"token":"([^"]*)"(?!.*"token":)/)[1];
 }
+// getToken()
 
 async function getEnvs(){  
   const token = await getToken();
